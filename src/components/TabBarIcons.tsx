@@ -1,18 +1,9 @@
 import type { FC } from "react";
 
-/** Иконки нижней навигационной панели.
- *
- *  Нарисованы как SVG, а не подключены картинками: цвет берётся из
- *  currentColor, поэтому активный пункт синий, остальные приглушённые,
- *  и одна и та же иконка остаётся чёткой на любом экране.
- *
- *  Свойство active переключает начертание: у выбранного пункта фигура
- *  залита, у остальных нарисована контуром. */
 export interface TabIconProps {
   active: boolean;
 }
 
-/** Лента — стопка карточек, листаемых одна за другой. */
 export const FeedIcon: FC<TabIconProps> = ({ active }) => (
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
     <rect
@@ -42,7 +33,6 @@ export const FeedIcon: FC<TabIconProps> = ({ active }) => (
   </svg>
 );
 
-/** Добавление — круг со знаком «плюс». */
 export const AddIcon: FC<TabIconProps> = ({ active }) => (
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
     <circle
@@ -62,7 +52,6 @@ export const AddIcon: FC<TabIconProps> = ({ active }) => (
   </svg>
 );
 
-/** Плитка — четыре квадрата в два столбца. */
 export const CatalogIcon: FC<TabIconProps> = ({ active }) => (
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
     {[
@@ -86,7 +75,6 @@ export const CatalogIcon: FC<TabIconProps> = ({ active }) => (
   </svg>
 );
 
-/** Вход — четвёртая иконка панели: дверь со стрелкой внутрь. */
 export const LoginIcon: FC<TabIconProps> = ({ active }) => (
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
     <path

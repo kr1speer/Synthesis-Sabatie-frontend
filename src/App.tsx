@@ -5,8 +5,6 @@ import FeedPage from "./pages/FeedPage";
 import MaterialPage from "./pages/MaterialPage";
 import { ROUTES } from "./Routes";
 
-/** Маршруты приложения: плитка материалов, лента и материал,
- *  открытый по идентификатору. Остальные адреса ведут на плитку. */
 const App: FC = () => (
   <BrowserRouter
     future={{ v7_startTransition: true, v7_relativeSplatPath: true }}

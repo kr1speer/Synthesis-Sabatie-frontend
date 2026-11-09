@@ -1,7 +1,5 @@
 import type { FC } from "react";
 
-/** Иконка лайка. В ЛР5 только показывает количество — ставить лайк
- *  можно будет после подключения веб-сервиса. */
 export const LikeIcon: FC<{ size?: number }> = ({ size = 16 }) => (
   <svg
     width={size}

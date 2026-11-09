@@ -3,11 +3,6 @@ import { Badge, Card } from "react-bootstrap";
 import { LikeIcon } from "./LikeIcon";
 import { fallbackToDefaultImage, materialImageUrl } from "../modules/media";
 
-/** Карточка материала на странице плитки.
- *
- *  Компонент ничего не знает ни о фильтре, ни о странице: всё, что он
- *  показывает, приходит в props, а по нажатию он лишь сообщает наверх
- *  идентификатор материала через onOpen. */
 export interface MaterialCardProps {
   id: number;
   materialName: string;

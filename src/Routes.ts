@@ -1,4 +1,3 @@
-/** Адреса страниц приложения. */
 export const ROUTES = {
   CATALOG: "/",
   FEED: "/feed",

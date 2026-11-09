@@ -8,17 +8,11 @@ import {
 } from "../modules/media";
 import type { SabatierMaterial } from "../modules/types";
 
-/** Один материал ленты поверх проигрываемого короткого видео.
- *
- *  Материал приходит в props целиком, а кнопка «Далее» только сообщает
- *  наверх о нажатии — какой материал показывать следующим, решает страница.
- *  Собственное состояние здесь одно: развёрнуто ли описание. */
 export interface FeedMaterialProps {
   material: SabatierMaterial;
   onNext: () => void;
 }
 
-/** Описание длиннее этого числа знаков показывается свёрнутым. */
 const DESCRIPTION_LIMIT = 60;
 
 export const FeedMaterial: FC<FeedMaterialProps> = ({ material, onNext }) => {
@@ -36,18 +30,13 @@ export const FeedMaterial: FC<FeedMaterialProps> = ({ material, onNext }) => {
         loop
         muted
         playsInline
-        /** Ключ заставляет React пересоздать тег при смене материала,
-         *  иначе браузер продолжит играть предыдущий ролик. */
         key={material.id}
       >
         <source
           src={materialVideoUrl(material.material_video_name)}
           type="video/mp4"
         />
-        {/* Запасной источник: если файл с таким именем не открылся,
-            браузер сам переходит к следующему <source> и играет ролик
-            по умолчанию. Для пустого имени первый источник и так
-            указывает на него, поэтому второй не нужен. */}
+
         {material.material_video_name && (
           <source src={DEFAULT_MATERIAL_VIDEO} type="video/mp4" />
         )}
