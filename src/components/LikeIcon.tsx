@@ -1,11 +1,17 @@
 import type { FC } from "react";
 
-export const LikeIcon: FC<{ size?: number }> = ({ size = 16 }) => (
+export interface LikeIconProps {
+  size?: number;
+  /** Материал залайкан текущим инженером-технологом */
+  liked?: boolean;
+}
+
+export const LikeIcon: FC<LikeIconProps> = ({ size = 16, liked = false }) => (
   <svg
     width={size}
     height={size}
     viewBox="0 0 24 24"
-    fill="none"
+    fill={liked ? "currentColor" : "none"}
     stroke="currentColor"
     strokeWidth="2"
     aria-hidden="true"

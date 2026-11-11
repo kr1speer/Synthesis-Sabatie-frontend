@@ -1,87 +1,72 @@
-import { useEffect, useState, type FC } from "react";
+import { useEffect, type FC } from "react";
+import { Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import type { SabatierMaterialOut } from "../api/Api";
 import { AppLayout } from "../components/AppLayout";
-import { Loader } from "../components/Loader";
 import { MaterialCard } from "../components/MaterialCard";
 import { MaterialFilter } from "../components/MaterialFilter";
 import {
-  getMaxReactionValue,
+  deleteSabatierMaterial,
   getSabatierMaterials,
-} from "../modules/materialsApi";
-import type { SabatierMaterial } from "../modules/types";
+  likeSabatierMaterial,
+} from "../slices/sabatierMaterialsSlice";
+import { useAppDispatch, useAppSelector } from "../store";
 import { materialRoute } from "../Routes";
 
-
 const CatalogPage: FC = () => {
-  const [materials, setMaterials] = useState<SabatierMaterial[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [sliderValue, setSliderValue] = useState(0);
-  const [appliedValue, setAppliedValue] = useState(0);
-
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const maxReactionValue = getMaxReactionValue();
 
+  const { materials, loading, error } = useAppSelector(
+    (state) => state.sabatierMaterials,
+  );
+  const isAuthenticated = useAppSelector(
+    (state) => state.chemistUser.isAuthenticated,
+  );
 
+  // Запрос выполняется не здесь, а в middleware: компонент только
+  // отправляет действие. Признак аутентификации в зависимостях — после
+  // входа и выхода плитка перечитывается с новыми is_mine и is_liked
   useEffect(() => {
-    let actual = true;
-    setLoading(true);
+    dispatch(getSabatierMaterials());
+  }, [dispatch, isAuthenticated]);
 
-    getSabatierMaterials(appliedValue).then((data) => {
-      if (!actual) {
-        return;
-      }
-      setMaterials(data);
-      setLoading(false);
-    });
-
-    return () => {
-      actual = false;
-    };
-  }, [appliedValue]);
-
-  const handleApply = (): void => setAppliedValue(sliderValue);
-
-  const handleReset = (): void => {
-    setSliderValue(0);
-    setAppliedValue(0);
-  };
-
-  const handleOpenMaterial = (materialId: number): void => {
-    navigate(materialRoute(materialId));
+  const handleLike = (material: SabatierMaterialOut): void => {
+    dispatch(
+      likeSabatierMaterial({
+        materialId: material.id,
+        liked: material.is_liked === 1 ? 0 : 1,
+      }),
+    );
   };
 
   return (
     <AppLayout contentClassName="grid-padding">
-      <MaterialFilter
-        value={sliderValue}
-        appliedValue={appliedValue}
-        maxValue={maxReactionValue}
-        foundCount={materials.length}
-        onChange={setSliderValue}
-        onApply={handleApply}
-        onReset={handleReset}
-      />
+      <MaterialFilter foundCount={materials.length} />
 
-      {loading && <Loader />}
+      {error && <Alert variant="warning">{error}</Alert>}
 
       {!loading && materials.length > 0 && (
         <div className="cards-grid">
           {materials.map((material) => (
             <MaterialCard
               key={material.id}
-              id={material.id}
-              materialName={material.material_name}
-              materialImageName={material.material_image_name}
-              minReactionValue={material.min_reaction_value}
-              likedCount={material.liked_count}
-              onOpen={handleOpenMaterial}
+              material={material}
+              isAuthenticated={isAuthenticated}
+              onOpen={(materialId) => navigate(materialRoute(materialId))}
+              onLike={handleLike}
+              onDelete={(materialId) =>
+                dispatch(deleteSabatierMaterial(materialId))
+              }
             />
           ))}
         </div>
       )}
 
-      {!loading && materials.length === 0 && (
-        <p className="empty-state">Нет материалов с таким минимальным значением</p>
+      {!loading && materials.length === 0 && !error && (
+        <p className="empty-state">
+          Нет материалов с таким минимальным значением
+        </p>
       )}
     </AppLayout>
   );

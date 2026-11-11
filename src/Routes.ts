@@ -1,11 +1,10 @@
 export const ROUTES = {
   CATALOG: "/",
   FEED: "/feed",
-  MATERIAL: "/feed",
-  LOGIN: "/login",
   DRAFT: "/draft",
+  LOGIN: "/login",
 } as const;
 
 export function materialRoute(materialId: number): string {
-  return `${ROUTES.MATERIAL}/${materialId}`;
+  return `${ROUTES.FEED}/${materialId}`;
 }

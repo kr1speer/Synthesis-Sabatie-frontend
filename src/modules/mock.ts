@@ -1,6 +1,8 @@
-import type { SabatierMaterial } from "./types";
+import type { SabatierMaterialOut } from "../api/Api";
 
-export const MATERIALS_MOCK: SabatierMaterial[] = [
+// Коллекция mock-объектов. Используется, пока веб-сервис недоступен,
+// и только для гостя: авторизованному пользователю подменять данные нельзя.
+export const MATERIALS_MOCK: SabatierMaterialOut[] = [
   {
     id: 1,
     material_name: "Водород H₂",
@@ -13,6 +15,8 @@ export const MATERIALS_MOCK: SabatierMaterial[] = [
     min_reaction_value: 503,
     molar_mass: 2.016,
     liked_count: 10,
+    is_mine: 0,
+    is_liked: 0,
   },
   {
     id: 2,
@@ -26,6 +30,8 @@ export const MATERIALS_MOCK: SabatierMaterial[] = [
     min_reaction_value: 2744,
     molar_mass: 44.01,
     liked_count: 6,
+    is_mine: 0,
+    is_liked: 0,
   },
   {
     id: 3,
@@ -39,6 +45,8 @@ export const MATERIALS_MOCK: SabatierMaterial[] = [
     min_reaction_value: 4493,
     molar_mass: 18.015,
     liked_count: 8,
+    is_mine: 0,
+    is_liked: 0,
   },
   {
     id: 4,
@@ -52,6 +60,8 @@ export const MATERIALS_MOCK: SabatierMaterial[] = [
     min_reaction_value: 4244,
     molar_mass: 27.23,
     liked_count: 3,
+    is_mine: 0,
+    is_liked: 0,
   },
   {
     id: 5,
@@ -65,5 +75,38 @@ export const MATERIALS_MOCK: SabatierMaterial[] = [
     min_reaction_value: 250,
     molar_mass: 58.69,
     liked_count: 7,
+    is_mine: 0,
+    is_liked: 0,
   },
 ];
+
+/** Фильтр по минимальному значению для реакции — тот же, что выполняет SQL-запрос бэкенда. */
+export function filterMaterialsMock(minReactionValue: number): SabatierMaterialOut[] {
+  return MATERIALS_MOCK.filter(
+    (material) =>
+      minReactionValue === 0 ||
+      (material.min_reaction_value ?? 0) >= minReactionValue,
+  );
+}
+
+/** Лента на mock-объектах: без ид — первый материал, с ид — указанный. */
+export function feedMaterialMock(materialId?: number): SabatierMaterialOut | null {
+  if (materialId === undefined) {
+    return MATERIALS_MOCK[0];
+  }
+  return MATERIALS_MOCK.find((material) => material.id === materialId) ?? null;
+}
+
+/** Следующий материал ленты на mock-объектах: за последним лента идёт к первому. */
+export function nextFeedMaterialMock(materialId: number): SabatierMaterialOut {
+  const index = MATERIALS_MOCK.findIndex((material) => material.id === materialId);
+  return MATERIALS_MOCK[(index + 1) % MATERIALS_MOCK.length];
+}
+
+/** Верхняя граница ползунка фильтра. */
+export function maxReactionValueMock(): number {
+  return MATERIALS_MOCK.reduce(
+    (max, material) => Math.max(max, material.min_reaction_value ?? 0),
+    0,
+  );
+}

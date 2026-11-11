@@ -1,27 +1,45 @@
 import type { ChangeEvent, FC } from "react";
 import { Button, Form } from "react-bootstrap";
+import {
+  getSabatierMaterials,
+  materialFilterApplied,
+  materialFilterReset,
+  minReactionValueChanged,
+  selectMaxReactionValue,
+} from "../slices/sabatierMaterialsSlice";
+import { useAppDispatch, useAppSelector } from "../store";
 
 export interface MaterialFilterProps {
-  value: number;
-  appliedValue: number;
-  maxValue: number;
   foundCount: number;
-  onChange: (value: number) => void;
-  onApply: () => void;
-  onReset: () => void;
 }
 
-export const MaterialFilter: FC<MaterialFilterProps> = ({
-  value,
-  appliedValue,
-  maxValue,
-  foundCount,
-  onChange,
-  onApply,
-  onReset,
-}) => {
+/**
+ * Фильтр по минимальному значению для типовой реакции.
+ *
+ * Значение ползунка и применённое значение лежат в store, поэтому фильтр
+ * не теряется при переходе на ленту и обратно. Отбор выполняет бэкенд:
+ * значение уходит в запрос как query-параметр.
+ */
+export const MaterialFilter: FC<MaterialFilterProps> = ({ foundCount }) => {
+  const dispatch = useAppDispatch();
+
+  const { minReactionValue, appliedReactionValue, loading } = useAppSelector(
+    (state) => state.sabatierMaterials,
+  );
+  const maxValue = useAppSelector(selectMaxReactionValue);
+
   const handleRangeChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    onChange(Number(event.target.value));
+    dispatch(minReactionValueChanged(Number(event.target.value)));
+  };
+
+  const handleApply = (): void => {
+    dispatch(materialFilterApplied());
+    dispatch(getSabatierMaterials());
+  };
+
+  const handleReset = (): void => {
+    dispatch(materialFilterReset());
+    dispatch(getSabatierMaterials());
   };
 
   return (
@@ -29,7 +47,7 @@ export const MaterialFilter: FC<MaterialFilterProps> = ({
       className="filter-panel"
       onSubmit={(event) => {
         event.preventDefault();
-        onApply();
+        handleApply();
       }}
     >
       <Form.Label htmlFor="min-reaction-value" className="filter-label">
@@ -37,9 +55,9 @@ export const MaterialFilter: FC<MaterialFilterProps> = ({
       </Form.Label>
 
       <p className="filter-status">
-        {appliedValue > 0 ? (
+        {appliedReactionValue > 0 ? (
           <>
-            Показаны материалы от <strong>{appliedValue} г</strong>
+            Показаны материалы от <strong>{appliedReactionValue} г</strong>
           </>
         ) : (
           "Показаны все материалы"
@@ -52,7 +70,7 @@ export const MaterialFilter: FC<MaterialFilterProps> = ({
         min={0}
         max={maxValue}
         step={1}
-        value={value}
+        value={minReactionValue}
         onChange={handleRangeChange}
       />
 
@@ -62,10 +80,15 @@ export const MaterialFilter: FC<MaterialFilterProps> = ({
       </div>
 
       <div className="filter-actions">
-        <Button type="submit" className="pill-btn">
+        <Button type="submit" className="pill-btn" disabled={loading}>
           Применить
         </Button>
-        <Button type="button" className="pill-btn" onClick={onReset}>
+        <Button
+          type="button"
+          className="pill-btn"
+          disabled={loading}
+          onClick={handleReset}
+        >
           Сбросить
         </Button>
       </div>

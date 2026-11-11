@@ -1,0 +1,50 @@
+Библиотеки фронтенда «Синтез метана по реакции Сабатье», лабораторная 6.
+Точные версии зафиксированы в package-lock.json, ставятся командой npm install.
+
+Рабочие зависимости (dependencies)
+
+react 18.3
+    Библиотека интерфейса: компоненты, props, состояние, хуки.
+
+react-dom 18.3
+    Отрисовка дерева компонентов React в DOM браузера.
+
+react-router-dom 6.30
+    Маршрутизация одностраничного приложения: четыре страницы без
+    перезагрузки документа, адрес ленты с ид материала.
+
+react-bootstrap 2.10
+    Готовые компоненты интерфейса: Card, Button, Form, Alert, Badge, Spinner.
+
+bootstrap 5.3
+    Таблица стилей, на которую опирается react-bootstrap.
+
+@reduxjs/toolkit 2.14
+    Менеджер состояний: глобальное хранилище, слайсы (reducer, action,
+    initialState) и middleware redux-thunk для асинхронных обращений к API.
+
+react-redux 9.3
+    Связь React с хранилищем: Provider, useSelector, useDispatch.
+
+axios 1.21
+    HTTP-запросы к веб-сервису. Поддерживает значения по умолчанию для всех
+    вызовов, в том числе withCredentials для куки сессии.
+
+Зависимости сборки (devDependencies)
+
+vite 5.4
+    Сборщик и сервер разработки на 3000 порту. Он же обратный прокси:
+    пересылает /api на FastAPI, чем снимается ограничение CORS.
+
+@vitejs/plugin-react 4.3
+    Поддержка JSX и горячей замены модулей в Vite.
+
+typescript 5.9
+    Статическая проверка типов перед сборкой.
+
+@types/react 18.3, @types/react-dom 18.3
+    Описания типов для React и React DOM.
+
+swagger-typescript-api 13.13
+    Кодогенерация клиента axios из спецификации OpenAPI бэкенда.
+    Запускается командой npm run generate-api, результат — src/api/Api.ts.

@@ -1,48 +1,82 @@
-import { useEffect, useState, type FC } from "react";
+import { useEffect, type FC } from "react";
+import { Alert } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
+import type { SabatierMaterialOut } from "../api/Api";
 import { AppLayout } from "../components/AppLayout";
 import { FeedMaterial } from "../components/FeedMaterial";
-import { Loader } from "../components/Loader";
 import {
-  getNextMaterialId,
   getSabatierMaterialFeed,
-} from "../modules/materialsApi";
-import type { SabatierMaterial } from "../modules/types";
+  likeSabatierMaterial,
+} from "../slices/sabatierMaterialsSlice";
+import { useAppDispatch, useAppSelector } from "../store";
+import { materialRoute } from "../Routes";
 
 const FeedPage: FC = () => {
-  const [material, setMaterial] = useState<SabatierMaterial | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [currentId, setCurrentId] = useState<number | undefined>(undefined);
+  const { id } = useParams<{ id: string }>();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const { feedMaterial, loading, error } = useAppSelector(
+    (state) => state.sabatierMaterials,
+  );
+  const isAuthenticated = useAppSelector(
+    (state) => state.chemistUser.isAuthenticated,
+  );
+
+  const routeMaterialId = id === undefined ? undefined : Number(id);
 
   useEffect(() => {
-    let actual = true;
-    setLoading(true);
-
-    getSabatierMaterialFeed(currentId).then((data) => {
-      if (!actual) {
-        return;
-      }
-      setMaterial(data);
-      setLoading(false);
-    });
-
-    return () => {
-      actual = false;
-    };
-  }, [currentId]);
-
-  const handleNext = (): void => {
-    if (material) {
-      setCurrentId(getNextMaterialId(material.id));
+    // Материал уже в store — «Далее» положило его туда до смены адреса
+    if (feedMaterial !== null && feedMaterial.id === routeMaterialId) {
+      return;
     }
+    dispatch(getSabatierMaterialFeed({ materialId: routeMaterialId }));
+    // feedMaterial в зависимостях не нужен: эффект работает на смену адреса
+  }, [dispatch, routeMaterialId]);
+
+  /** Следующий материал ищет бэкенд: ид могут идти с пропусками. */
+  const handleNext = async (): Promise<void> => {
+    if (feedMaterial === null) {
+      return;
+    }
+
+    const action = await dispatch(
+      getSabatierMaterialFeed({ materialId: feedMaterial.id, next: true }),
+    );
+    const nextMaterial = (action.payload ?? null) as SabatierMaterialOut | null;
+
+    if (nextMaterial !== null) {
+      navigate(materialRoute(nextMaterial.id), { replace: true });
+    }
+  };
+
+  const handleLike = (material: SabatierMaterialOut): void => {
+    dispatch(
+      likeSabatierMaterial({
+        materialId: material.id,
+        liked: material.is_liked === 1 ? 0 : 1,
+      }),
+    );
   };
 
   return (
     <AppLayout>
-      {loading && <Loader />}
-      {!loading && material && (
-        <FeedMaterial material={material} onNext={handleNext} />
+      {error && (
+        <Alert variant="warning" className="feed-alert">
+          {error}
+        </Alert>
       )}
-      {!loading && !material && (
+
+      {feedMaterial !== null && (
+        <FeedMaterial
+          material={feedMaterial}
+          isAuthenticated={isAuthenticated}
+          onNext={handleNext}
+          onLike={handleLike}
+        />
+      )}
+
+      {!loading && feedMaterial === null && !error && (
         <p className="empty-state">Материал не найден</p>
       )}
     </AppLayout>

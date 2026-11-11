@@ -95,3 +95,24 @@ export const LoginIcon: FC<TabIconProps> = ({ active }) => (
     />
   </svg>
 );
+
+export const LogoutIcon: FC<TabIconProps> = ({ active }) => (
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      d="M10.5 3.5H6.3a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h4.2"
+      fill={active ? "currentColor" : "none"}
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M20 12h-8.4M14.7 8.6 11.3 12l3.4 3.4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);

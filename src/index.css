@@ -65,6 +65,16 @@ body {
   color: var(--identity-primary);
 }
 
+.app-subtitle {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.app-subtitle strong {
+  color: var(--identity-primary);
+}
+
 .content-area {
   flex: 1;
   min-height: 0;
@@ -85,12 +95,25 @@ body {
   color: var(--text-muted);
 }
 
-.loader-box {
+/* Анимация запроса перекрывает всю страницу вместе с навигационной панелью,
+   поэтому кнопки на время запроса недоступны */
+.blocking-loader {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  padding: 40px 0;
+  justify-content: center;
+  gap: 10px;
+  background-color: rgba(242, 242, 253, 0.75);
+  backdrop-filter: blur(2px);
   color: var(--identity-primary);
+}
+
+.blocking-loader-text {
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .pill-btn,
@@ -277,9 +300,43 @@ body {
   display: flex;
   align-items: center;
   gap: 4px;
+  padding: 0;
+  border: none;
+  background: none;
   font-size: 12px;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+}
+
+.grid-card-likes:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.grid-card-likes.liked {
+  color: var(--surface-white);
+}
+
+.card-delete-btn {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--surface-white);
+  color: #b3261e;
+  cursor: pointer;
+}
+
+.card-delete-btn:hover {
+  background-color: #b3261e;
+  color: var(--surface-white);
 }
 
 
@@ -424,7 +481,21 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 2px;
+  padding: 0;
+  border: none;
+  background: none;
   color: var(--text-on-card);
+  cursor: pointer;
+}
+
+.feed-like:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.feed-like-icon.liked {
+  background-color: #b3261e;
+  border-color: #b3261e;
 }
 
 .feed-like-icon {
@@ -474,6 +545,14 @@ body {
   gap: 2px;
 }
 
+button.nav-item {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
 .nav-item:hover {
   color: var(--identity-primary);
 }
@@ -487,4 +566,77 @@ body {
   opacity: 0.4;
   cursor: not-allowed;
   pointer-events: none;
+}
+
+
+.page-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--identity-primary);
+}
+
+.page-subtitle {
+  margin: 4px 0 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-field {
+  margin-bottom: 12px;
+}
+
+.auth-field .form-control {
+  border: 1px solid var(--chip-border);
+  border-radius: 12px;
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+.auth-field .form-control:focus {
+  border-color: var(--identity-accent);
+  box-shadow: 0 0 0 3px rgba(49, 114, 217, 0.15);
+}
+
+.draft-preview {
+  display: block;
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-bottom: 12px;
+}
+
+.draft-card {
+  padding: 8px;
+  margin-bottom: 12px;
+  border-radius: 20px;
+  background-color: var(--identity-primary);
+  box-shadow: 0 4px 12px rgba(0, 52, 155, 0.18);
+}
+
+.draft-card .draft-preview {
+  margin-bottom: 8px;
+}
+
+.draft-name {
+  display: block;
+  padding: 0 4px 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-on-card);
+}
+
+.draft-file-name {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.feed-alert.alert {
+  margin: 12px 16px 0;
+  font-size: 13px;
 }

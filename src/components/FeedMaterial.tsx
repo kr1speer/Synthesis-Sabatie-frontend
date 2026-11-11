@@ -1,21 +1,29 @@
 import { useState, type FC } from "react";
 import { Button } from "react-bootstrap";
-import { LikeIcon } from "./LikeIcon";
+import type { SabatierMaterialOut } from "../api/Api";
 import {
-  DEFAULT_MATERIAL_VIDEO,
   materialImageUrl,
   materialVideoUrl,
+  mockMaterialVideoUrl,
+  DEFAULT_MATERIAL_VIDEO,
 } from "../modules/media";
-import type { SabatierMaterial } from "../modules/types";
+import { LikeIcon } from "./LikeIcon";
 
 export interface FeedMaterialProps {
-  material: SabatierMaterial;
+  material: SabatierMaterialOut;
+  isAuthenticated: boolean;
   onNext: () => void;
+  onLike: (material: SabatierMaterialOut) => void;
 }
 
 const DESCRIPTION_LIMIT = 60;
 
-export const FeedMaterial: FC<FeedMaterialProps> = ({ material, onNext }) => {
+export const FeedMaterial: FC<FeedMaterialProps> = ({
+  material,
+  isAuthenticated,
+  onNext,
+  onLike,
+}) => {
   const [descriptionOpen, setDescriptionOpen] = useState(false);
 
   const description = material.material_description ?? "";
@@ -23,6 +31,8 @@ export const FeedMaterial: FC<FeedMaterialProps> = ({ material, onNext }) => {
 
   return (
     <div className="feed-viewport">
+      {/* Источники перебираются сверху вниз: MinIO, копия из проекта
+          для режима mock и, наконец, видео по умолчанию */}
       <video
         className="feed-video"
         poster={materialImageUrl(material.material_image_name)}
@@ -36,10 +46,11 @@ export const FeedMaterial: FC<FeedMaterialProps> = ({ material, onNext }) => {
           src={materialVideoUrl(material.material_video_name)}
           type="video/mp4"
         />
-
-        {material.material_video_name && (
-          <source src={DEFAULT_MATERIAL_VIDEO} type="video/mp4" />
-        )}
+        <source
+          src={mockMaterialVideoUrl(material.material_video_name)}
+          type="video/mp4"
+        />
+        <source src={DEFAULT_MATERIAL_VIDEO} type="video/mp4" />
       </video>
 
       <div className="feed-overlay-card">
@@ -74,12 +85,20 @@ export const FeedMaterial: FC<FeedMaterialProps> = ({ material, onNext }) => {
           <span className="param-chip-value">{material.molar_mass ?? "—"}</span>
         </div>
 
-        <div className="feed-like">
-          <span className="feed-like-icon">
-            <LikeIcon size={22} />
+        <button
+          type="button"
+          className="feed-like"
+          disabled={!isAuthenticated}
+          title={isAuthenticated ? "Лайк материала" : "Лайк доступен после входа"}
+          onClick={() => onLike(material)}
+        >
+          <span
+            className={`feed-like-icon${material.is_liked === 1 ? " liked" : ""}`}
+          >
+            <LikeIcon size={22} liked={material.is_liked === 1} />
           </span>
           <span className="like-count">{material.liked_count}</span>
-        </div>
+        </button>
 
         <Button
           type="button"
