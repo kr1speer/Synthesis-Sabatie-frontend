@@ -54,8 +54,6 @@ export interface ChemistUserOut {
   chemist_login: string;
   /** Full Name */
   full_name: string;
-  /** Is Moderator */
-  is_moderator: boolean;
 }
 
 /** ChemistUserRegisterIn */

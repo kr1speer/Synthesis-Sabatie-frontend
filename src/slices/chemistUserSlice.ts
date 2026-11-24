@@ -4,7 +4,6 @@ import type { ChemistUserOut } from "../api/Api";
 interface ChemistUserState {
   chemistLogin: string;
   fullName: string;
-  isModerator: boolean;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
@@ -13,7 +12,6 @@ interface ChemistUserState {
 const initialState: ChemistUserState = {
   chemistLogin: "",
   fullName: "",
-  isModerator: false,
   isAuthenticated: false,
   loading: false,
   error: null,
@@ -31,7 +29,6 @@ const chemistUserSlice = createSlice({
     chemistUserLoggedIn(state, action: PayloadAction<ChemistUserOut>) {
       state.chemistLogin = action.payload.chemist_login;
       state.fullName = action.payload.full_name;
-      state.isModerator = action.payload.is_moderator;
       state.isAuthenticated = true;
       state.loading = false;
       state.error = null;

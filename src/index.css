@@ -519,7 +519,7 @@ body {
   width: 100%;
   padding: 10px 0;
   gap: 4px;
-  font-size: 13px;
+  font-size: 11px;
   background-color: rgba(0, 52, 155, 0.35);
 }
 
@@ -629,6 +629,30 @@ button.nav-item {
   font-size: 14px;
   font-weight: 700;
   color: var(--text-on-card);
+}
+
+.media-field {
+  display: grid;
+  grid-template-columns: 1fr 88px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.media-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.media-preview {
+  display: block;
+  width: 88px;
+  height: 88px;
+  object-fit: cover;
+  border-radius: 14px;
+  background-color: var(--identity-primary);
 }
 
 .draft-file-name {

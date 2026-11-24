@@ -10,6 +10,8 @@ import {
 } from "../slices/materialDraftSlice";
 import { useAppDispatch, useAppSelector } from "../store";
 import {
+  DEFAULT_MATERIAL_IMAGE,
+  DEFAULT_MATERIAL_VIDEO,
   fallbackToDefaultImage,
   materialImageUrl,
 } from "../modules/media";
@@ -30,6 +32,7 @@ const DraftPage: FC = () => {
   const [materialImage, setMaterialImage] = useState<File | null>(null);
   const [materialVideo, setMaterialVideo] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [videoPreview, setVideoPreview] = useState<string | null>(null);
 
   const [publishForm, setPublishForm] = useState({
     material_description: "",
@@ -45,6 +48,22 @@ const DraftPage: FC = () => {
     dispatch(getSabatierMaterialDraft());
   }, [dispatch, navigate, isAuthenticated]);
 
+  useEffect(() => {
+    return () => {
+      if (imagePreview !== null) {
+        URL.revokeObjectURL(imagePreview);
+      }
+    };
+  }, [imagePreview]);
+
+  useEffect(() => {
+    return () => {
+      if (videoPreview !== null) {
+        URL.revokeObjectURL(videoPreview);
+      }
+    };
+  }, [videoPreview]);
+
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const file = event.target.files?.[0] ?? null;
     setMaterialImage(file);
@@ -52,7 +71,9 @@ const DraftPage: FC = () => {
   };
 
   const handleVideoChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setMaterialVideo(event.target.files?.[0] ?? null);
+    const file = event.target.files?.[0] ?? null;
+    setMaterialVideo(file);
+    setVideoPreview(file === null ? null : URL.createObjectURL(file));
   };
 
   const handlePublishFieldChange = (
@@ -99,6 +120,7 @@ const DraftPage: FC = () => {
     setMaterialImage(null);
     setMaterialVideo(null);
     setImagePreview(null);
+    setVideoPreview(null);
     setPublishForm({
       material_description: "",
       min_reaction_value: "",
@@ -134,35 +156,50 @@ const DraftPage: FC = () => {
             />
           </Form.Group>
 
-          <Form.Group controlId="material_image" className="auth-field">
-            <Form.Label className="filter-label">Изображение</Form.Label>
-            <Form.Control
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
+          <Form.Group controlId="material_image" className="media-field">
+            <div className="media-info">
+              <Form.Label className="filter-label">Изображение</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              {materialImage !== null && (
+                <Form.Text className="draft-file-name">
+                  {materialImage.name}
+                </Form.Text>
+              )}
+            </div>
+            <img
+              className="media-preview"
+              src={imagePreview ?? DEFAULT_MATERIAL_IMAGE}
+              alt="Изображение материала"
             />
           </Form.Group>
 
-          {imagePreview !== null && (
-            <img
-              className="draft-preview"
-              src={imagePreview}
-              alt="Выбранное изображение материала"
+          <Form.Group controlId="material_video" className="media-field">
+            <div className="media-info">
+              <Form.Label className="filter-label">Короткое видео</Form.Label>
+              <Form.Control
+                type="file"
+                accept="video/mp4"
+                onChange={handleVideoChange}
+              />
+              {materialVideo !== null && (
+                <Form.Text className="draft-file-name">
+                  {materialVideo.name}
+                </Form.Text>
+              )}
+            </div>
+            <video
+              key={videoPreview ?? DEFAULT_MATERIAL_VIDEO}
+              className="media-preview"
+              src={videoPreview ?? DEFAULT_MATERIAL_VIDEO}
+              autoPlay
+              loop
+              muted
+              playsInline
             />
-          )}
-
-          <Form.Group controlId="material_video" className="auth-field">
-            <Form.Label className="filter-label">Короткое видео</Form.Label>
-            <Form.Control
-              type="file"
-              accept="video/mp4"
-              onChange={handleVideoChange}
-            />
-            {materialVideo !== null && (
-              <Form.Text className="draft-file-name">
-                {materialVideo.name}
-              </Form.Text>
-            )}
           </Form.Group>
 
           <div className="filter-actions">
