@@ -10,6 +10,17 @@ import {
   chemistUserRequestStarted,
 } from "../slices/chemistUserSlice";
 import { useAppDispatch, useAppSelector } from "../store";
+
+function loginErrorMessage(error: unknown): string {
+  const status = axios.isAxiosError(error) ? error.response?.status : undefined;
+  if (status === 401) {
+    return "Неверный логин или пароль";
+  }
+  if (status === 422) {
+    return "Введите логин и пароль";
+  }
+  return "Веб-сервис недоступен: вход работает только при запущенном бэкенде";
+}
 import { ROUTES } from "../Routes";
 
 /**
@@ -52,8 +63,8 @@ const LoginPage: FC = () => {
 
       dispatch(chemistUserLoggedIn(response.data));
       navigate(ROUTES.CATALOG);
-    } catch {
-      dispatch(chemistUserRequestFailed("Неверный логин или пароль"));
+    } catch (error) {
+      dispatch(chemistUserRequestFailed(loginErrorMessage(error)));
     }
   };
 

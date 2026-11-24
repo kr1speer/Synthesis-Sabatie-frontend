@@ -38,7 +38,7 @@ const CatalogPage: FC = () => {
   };
 
   return (
-    <AppLayout contentClassName="grid-padding">
+    <AppLayout contentClassName="grid-padding" wide>
       <MaterialFilter foundCount={materials.length} />
 
       {error && <Alert variant="warning">{error}</Alert>}

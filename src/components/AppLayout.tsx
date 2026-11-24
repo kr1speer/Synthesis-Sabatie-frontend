@@ -5,11 +5,13 @@ import { TabBar } from "./TabBar";
 
 export interface AppLayoutProps {
   contentClassName?: string;
+  wide?: boolean;
   children: ReactNode;
 }
 
 export const AppLayout: FC<AppLayoutProps> = ({
   contentClassName = "",
+  wide = false,
   children,
 }) => {
   const requestInProgress = useAppSelector(selectRequestInProgress);
@@ -19,7 +21,7 @@ export const AppLayout: FC<AppLayoutProps> = ({
   const usingMock = useAppSelector((state) => state.sabatierMaterials.usingMock);
 
   return (
-    <div className="mobile-container">
+    <div className={`mobile-container${wide ? " wide-layout" : ""}`}>
       <header className="app-header">
         <h1 className="app-title">Синтез метана Сабатье</h1>
         <p className="app-subtitle">
