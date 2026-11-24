@@ -26,15 +26,12 @@ const FeedPage: FC = () => {
   const routeMaterialId = id === undefined ? undefined : Number(id);
 
   useEffect(() => {
-    // Материал уже в store — «Далее» положило его туда до смены адреса
     if (feedMaterial !== null && feedMaterial.id === routeMaterialId) {
       return;
     }
     dispatch(getSabatierMaterialFeed({ materialId: routeMaterialId }));
-    // feedMaterial в зависимостях не нужен: эффект работает на смену адреса
   }, [dispatch, routeMaterialId]);
 
-  /** Следующий материал ищет бэкенд: ид могут идти с пропусками. */
   const handleNext = async (): Promise<void> => {
     if (feedMaterial === null) {
       return;

@@ -15,14 +15,6 @@ import {
 } from "../modules/media";
 import { ROUTES } from "../Routes";
 
-/**
- * Страница добавления материала.
- *
- * Работа идёт в два шага, как устроен веб-сервис: «Далее» создаёт черновик
- * с названием и файлами, «Опубликовать» заполняет описание и оба поля
- * по предметной области и переводит черновик в опубликованный материал.
- * Статус материала в интерфейс не выводится — это разные окна.
- */
 const DraftPage: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -37,7 +29,6 @@ const DraftPage: FC = () => {
   const [materialName, setMaterialName] = useState("");
   const [materialImage, setMaterialImage] = useState<File | null>(null);
   const [materialVideo, setMaterialVideo] = useState<File | null>(null);
-  // Выбранный файл показывается на странице до отправки на бэкенд
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const [publishForm, setPublishForm] = useState({
@@ -70,13 +61,11 @@ const DraftPage: FC = () => {
     setPublishForm({ ...publishForm, [event.target.name]: event.target.value });
   };
 
-  // «Далее»: создаётся черновик, файлы уходят в MinIO
   const handleCreate = (event: FormEvent): void => {
     event.preventDefault();
     dispatch(createSabatierMaterial({ materialName, materialImage, materialVideo }));
   };
 
-  // «Опубликовать»: черновик становится материалом каталога
   const handlePublish = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
     if (draftMaterial === null) {
@@ -98,7 +87,6 @@ const DraftPage: FC = () => {
     }
   };
 
-  // «Удалить»: черновик удаляется логически, сменой статуса
   const handleDelete = (): void => {
     if (draftMaterial === null) {
       return;

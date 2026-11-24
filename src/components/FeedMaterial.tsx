@@ -31,8 +31,6 @@ export const FeedMaterial: FC<FeedMaterialProps> = ({
 
   return (
     <div className="feed-viewport">
-      {/* Источники перебираются сверху вниз: MinIO, копия из проекта
-          для режима mock и, наконец, видео по умолчанию */}
       <video
         className="feed-video"
         poster={materialImageUrl(material.material_image_name)}

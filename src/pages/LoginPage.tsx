@@ -44,7 +44,6 @@ const LoginPage: FC = () => {
     dispatch(chemistUserRequestStarted());
 
     try {
-      // withCredentials обязателен: ответ приходит с Set-Cookie session_id
       const response = await axios.post<ChemistUserOut>(
         "/api/chemist_users/login",
         formData,
@@ -52,8 +51,6 @@ const LoginPage: FC = () => {
       );
 
       dispatch(chemistUserLoggedIn(response.data));
-      // Плитка перечитается сама: она следит за признаком аутентификации
-      // и приходит уже с is_mine и is_liked этого пользователя
       navigate(ROUTES.CATALOG);
     } catch {
       dispatch(chemistUserRequestFailed("Неверный логин или пароль"));
@@ -63,8 +60,6 @@ const LoginPage: FC = () => {
   const handleSubmit = (event: FormEvent): void => {
     event.preventDefault();
 
-    // Кнопку не блокируем: пустые поля объясняем сообщением, иначе
-    // непонятно, почему на неё не нажимается
     if (!formData.chemist_login || !formData.chemist_password) {
       dispatch(chemistUserRequestFailed("Заполните логин и пароль"));
       return;

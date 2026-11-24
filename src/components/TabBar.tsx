@@ -22,7 +22,6 @@ interface TabItem {
   label: string;
   route: string;
   Icon: FC<TabIconProps>;
-  /** Пункт доступен гостю; остальные открываются после аутентификации */
   guestAllowed: boolean;
 }
 
@@ -44,10 +43,6 @@ export const TabBar: FC = () => {
   const isActive = (route: string): boolean =>
     route === ROUTES.CATALOG ? pathname === route : pathname.startsWith(route);
 
-  /**
-   * Деавторизация. Домен «Инженер-технолог» ходит в веб-сервис обычным
-   * axios прямо из компонента, без thunk и без кодогенерации.
-   */
   const handleLogout = async (): Promise<void> => {
     dispatch(chemistUserRequestStarted());
 
@@ -57,12 +52,10 @@ export const TabBar: FC = () => {
       });
       dispatch(chemistUserLoggedOut());
     } catch {
-      // Сессии на бэкенде уже нет — интерфейс всё равно возвращаем гостю
       dispatch(chemistUserLoggedOut());
       dispatch(chemistUserRequestFailed("Сессия уже завершена"));
     }
 
-    // При выходе сбрасывается фильтр пользователя
     dispatch(materialFilterReset());
     navigate(ROUTES.CATALOG);
   };

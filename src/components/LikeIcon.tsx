@@ -2,7 +2,6 @@ import type { FC } from "react";
 
 export interface LikeIconProps {
   size?: number;
-  /** Материал залайкан текущим инженером-технологом */
   liked?: boolean;
 }
 

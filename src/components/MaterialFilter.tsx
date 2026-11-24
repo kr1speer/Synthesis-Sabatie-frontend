@@ -13,13 +13,6 @@ export interface MaterialFilterProps {
   foundCount: number;
 }
 
-/**
- * Фильтр по минимальному значению для типовой реакции.
- *
- * Значение ползунка и применённое значение лежат в store, поэтому фильтр
- * не теряется при переходе на ленту и обратно. Отбор выполняет бэкенд:
- * значение уходит в запрос как query-параметр.
- */
 export const MaterialFilter: FC<MaterialFilterProps> = ({ foundCount }) => {
   const dispatch = useAppDispatch();
 

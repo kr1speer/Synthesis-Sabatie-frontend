@@ -24,9 +24,6 @@ const CatalogPage: FC = () => {
     (state) => state.chemistUser.isAuthenticated,
   );
 
-  // Запрос выполняется не здесь, а в middleware: компонент только
-  // отправляет действие. Признак аутентификации в зависимостях — после
-  // входа и выхода плитка перечитывается с новыми is_mine и is_liked
   useEffect(() => {
     dispatch(getSabatierMaterials());
   }, [dispatch, isAuthenticated]);

@@ -7,7 +7,6 @@ import { TrashIcon } from "./TrashIcon";
 
 export interface MaterialCardProps {
   material: SabatierMaterialOut;
-  /** Лайк и удаление доступны только аутентифицированному пользователю */
   isAuthenticated: boolean;
   onOpen: (materialId: number) => void;
   onLike: (material: SabatierMaterialOut) => void;
@@ -21,8 +20,6 @@ export const MaterialCard: FC<MaterialCardProps> = ({
   onLike,
   onDelete,
 }) => {
-  // Кнопки лежат внутри карточки, а по карточке открывается лента —
-  // всплытие события останавливаем
   const withoutOpening =
     (action: () => void) =>
     (event: MouseEvent<HTMLButtonElement>): void => {

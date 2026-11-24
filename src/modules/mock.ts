@@ -1,7 +1,5 @@
 import type { SabatierMaterialOut } from "../api/Api";
 
-// Коллекция mock-объектов. Используется, пока веб-сервис недоступен,
-// и только для гостя: авторизованному пользователю подменять данные нельзя.
 export const MATERIALS_MOCK: SabatierMaterialOut[] = [
   {
     id: 1,
@@ -80,7 +78,6 @@ export const MATERIALS_MOCK: SabatierMaterialOut[] = [
   },
 ];
 
-/** Фильтр по минимальному значению для реакции — тот же, что выполняет SQL-запрос бэкенда. */
 export function filterMaterialsMock(minReactionValue: number): SabatierMaterialOut[] {
   return MATERIALS_MOCK.filter(
     (material) =>
@@ -89,7 +86,6 @@ export function filterMaterialsMock(minReactionValue: number): SabatierMaterialO
   );
 }
 
-/** Лента на mock-объектах: без ид — первый материал, с ид — указанный. */
 export function feedMaterialMock(materialId?: number): SabatierMaterialOut | null {
   if (materialId === undefined) {
     return MATERIALS_MOCK[0];
@@ -97,13 +93,11 @@ export function feedMaterialMock(materialId?: number): SabatierMaterialOut | nul
   return MATERIALS_MOCK.find((material) => material.id === materialId) ?? null;
 }
 
-/** Следующий материал ленты на mock-объектах: за последним лента идёт к первому. */
 export function nextFeedMaterialMock(materialId: number): SabatierMaterialOut {
   const index = MATERIALS_MOCK.findIndex((material) => material.id === materialId);
   return MATERIALS_MOCK[(index + 1) % MATERIALS_MOCK.length];
 }
 
-/** Верхняя граница ползунка фильтра. */
 export function maxReactionValueMock(): number {
   return MATERIALS_MOCK.reduce(
     (max, material) => Math.max(max, material.min_reaction_value ?? 0),

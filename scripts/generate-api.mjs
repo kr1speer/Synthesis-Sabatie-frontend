@@ -5,10 +5,6 @@ import { generateApi } from "swagger-typescript-api";
 const SWAGGER_URL =
   process.env.SABATIER_OPENAPI_URL ?? "http://127.0.0.1:8000/openapi.json";
 
-// Кодогенерацией закрыт только домен «Материал» — это его семь методов.
-// Домен «Инженер-технолог» (регистрация, вход, выход) пишется вручную
-// обычным axios, как требует методичка, поэтому его пути из спецификации
-// выбрасываются и в сгенерированный клиент не попадают.
 const GENERATED_PATH_PREFIX = "/api/sabatier_materials";
 
 function routeNameFromOperationId(operationId) {
