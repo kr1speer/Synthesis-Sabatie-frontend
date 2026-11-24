@@ -1,12 +1,14 @@
 const MINIO_BUCKET_URL = "/s3/sabatie-assets";
 
-export const DEFAULT_MATERIAL_IMAGE = "/default_material.png";
-export const DEFAULT_MATERIAL_VIDEO = "/default_material.mp4";
+const BASE_URL = import.meta.env.BASE_URL;
+
+export const DEFAULT_MATERIAL_IMAGE = `${BASE_URL}default_material.png`;
+export const DEFAULT_MATERIAL_VIDEO = `${BASE_URL}default_material.mp4`;
 
 const DEFAULT_IMAGE_NAME = "default_material.png";
 const DEFAULT_VIDEO_NAME = "default_material.mp4";
 
-const MOCK_MEDIA_PATH = "/materials";
+const MOCK_MEDIA_PATH = `${BASE_URL}materials`;
 
 export function materialImageUrl(imageName: string): string {
   if (!imageName || imageName === DEFAULT_IMAGE_NAME) {

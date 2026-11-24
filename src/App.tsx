@@ -6,8 +6,11 @@ import FeedPage from "./pages/FeedPage";
 import LoginPage from "./pages/LoginPage";
 import { ROUTES } from "./Routes";
 
+const ROUTER_BASENAME = import.meta.env.BASE_URL.replace(/\/$/, "");
+
 const App: FC = () => (
   <BrowserRouter
+    basename={ROUTER_BASENAME}
     future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
   >
     <Routes>
